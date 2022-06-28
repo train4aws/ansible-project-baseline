@@ -1,0 +1,6 @@
+---
+- name: Patch Hosts
+  hosts: all
+  tasks:
+    - name: Reboot Server if Kernel Update Applied
+      reboot:
