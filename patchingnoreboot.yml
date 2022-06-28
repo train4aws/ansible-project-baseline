@@ -1,0 +1,23 @@
+---
+- name: Patch Hosts
+  hosts: all
+  tasks:
+    - name:  update
+      ignore_errors: True
+      yum:
+        name:  "*"
+        state: latest
+#        skip_broken: yes
+
+#      yum:
+#        name: "*"
+#        state: latest
+#        exclude: puppet*
+
+      register: yum_updates
+    - name: Update Using SkipBroken
+      yum:
+        name:  "*"
+        state: latest
+        skip_broken: yes
+      when:  yum_updates.results is search('skip')

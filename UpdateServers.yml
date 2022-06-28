@@ -1,0 +1,14 @@
+---
+- name: Get server uptime
+  hosts: all
+  tasks:
+    - name:  update
+      yum:
+        name:  "*"
+        state: latest
+#        skip_broken: yes
+      register: yum_updates
+
+    - name: Reboot server1
+      reboot:
+      when: dict((yum_updates.changes|default(dict())).updated|default([])).kernel is defined

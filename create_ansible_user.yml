@@ -1,0 +1,33 @@
+---
+  # this playbook creates the ansible user for tower
+  # after the user is created, ~/.ssh/authorized_keys will
+  # also be created to allow ssh-key login for tower
+  # the same user will then be added to the sudoers.d
+  # directory to allow for passwordless sudo access
+
+  - name: create ansible user and keys
+    hosts: all
+    gather_facts: no
+    become: yes
+    become_user: root
+    tasks:
+      - name: "add a new user named {{ toweradm_user_name }}""
+        user:
+          name: "{{ toweradm_user_name }}"
+          shell: /bin/bash
+          password: "{{ toweradm_user_password }}"
+
+      - name: add ansible user to the sudoers
+        copy:
+          dest: "/etc/sudoers.d/10_{{ toweradm_user_name }}"
+          content: "{{ toweradm_user_name }} ALL=(ALL) NOPASSWD: ALL"
+          owner: root
+          group: root
+          mode: 0440
+          validate: '/usr/sbin/visudo -c -s -f /etc/sudoers.d/10_{{ toweradm_user_name }}'
+
+      - name: deploy SSH key
+        authorized_key:
+          user: ansible
+          key: "{{ toweradm_user_pub_key }}"
+          state: present
