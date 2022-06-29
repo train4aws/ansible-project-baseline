@@ -1,0 +1,31 @@
+---
+- name: Fix ntpd time drift
+  hosts: all
+  become: yes
+  gather_facts: no
+  ignore_errors: yes
+  ignore_unreachable: yes
+  tasks:
+    - name: Verify ntpd status
+      shell: service ntpd status
+      register: ntpd_status
+      failed_when: false
+      args:
+        warn: false
+
+    - name: Add ntpdate.sh to /etc/cron.hourly
+      copy:
+        src: files/ntpdate.sh
+        dest: /etc/cron.hourly/ntpdate.sh
+        owner: root
+        group: root
+        mode: 0700
+      when: ntpd_status.rc == 0
+      notify: 
+        - restart ntpd
+
+  handlers:
+    - name: restart ntpd
+      service:
+        name: ntpd
+        state: restarted

@@ -1,0 +1,40 @@
+---
+- name: Validate Hosts
+  hosts: all
+  gather_facts: false
+  tasks:
+      
+    - block:
+      - wait_for_connection:
+          sleep: 1
+          timeout: 10
+      rescue:
+      - name: Failed Hosts
+        debug:
+          msg: "Virtual machine {{ inventory_hostname }} is offline."
+      - meta: clear_host_errors
+      - meta: end_host
+
+    - name: Online Hosts
+      debug:
+        msg: "{{ inventory_hostname }} is running."
+
+    - name: Gather the facts for the system
+      setup:
+
+    - block:
+      - name: Create a test file on /tmp
+        file:
+          path: /tmp/ansible.system_health_test.txt
+          state: touch
+          mode: 0644
+      - name: Delete a test file on /tmp
+        file:
+          path: /tmp/ansible.system_health_test.txt
+          state: absent
+      rescue:
+      - name: Read Only Filesystem
+        debug:
+          msg: "Virtual machine {{ inventory_hostname }} has a read only file system at /tmp."
+      - meta: clear_host_errors
+      - meta: end_host
