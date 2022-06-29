@@ -1,0 +1,38 @@
+---
+  # This is only part of the job template. This playbook should only be run in
+  # ansible tower at vm-cprk-ansible1.ncep.noaa.gov as there are dependencies
+  # that are present in tower.
+  #
+  # Note that once this play has successfully changed the password that succeeding
+  # runs will not be successful until you have changed the login credentials for the
+  # playbook to the new passwords.
+  #
+  - name: reset root and sysadm passwords
+    hosts: all
+    gather_facts: no
+    connection: paramiko
+    become: yes
+    become_user: root
+    ignore_errors: yes
+    tasks:
+
+      # check if sudoers file has Defaults requiretty uncommented
+      # and comment it out
+      - name: remove requiretty for ansible
+        lineinfile: regexp="(\s+)?\w+\s+requiretty" dest=/etc/sudoers state=absent
+
+      # do root first if we are changing both users' passwords
+      # as we won't be able to sudo to change the root
+      # password if we do sysadm first
+      - name: Change Password for root user
+        user:
+          name: root
+          password: "{{ root_password | password_hash('sha512') }}"
+          update_password: always
+        tags: do_root
+      - name: Change Password for sysadm user
+        user:
+          name: sysadm
+          password: "{{ sysadm_password | password_hash('sha512') }}"
+          update_password: always
+        tags: do_sysadm
