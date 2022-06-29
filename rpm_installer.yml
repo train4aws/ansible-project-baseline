@@ -1,0 +1,30 @@
+---
+## This playbook installs single or multiple rpm packages
+## variables used
+#     pkge_list: list of all rpms to be installed
+
+## In the extra vars section in Ansible tower, type the following
+## where pkg_name are the names of packages: 
+#    pkge_list:
+#        - pkg_name
+#        - pkg_name
+#        - pkg_name
+
+## Author: EStelle Lissouck
+## date: 04/13/22 
+
+- name: install RPM packages
+  hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+      - name: remove iperf
+        package:
+           name:  iperf
+           state: absent
+        
+      - name: install the rpm packages
+        package:
+           name:  "{{ item }}"
+           state: present
+        loop: "{{ pkge_list }}"
