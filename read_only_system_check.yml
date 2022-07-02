@@ -1,6 +1,9 @@
 ---
 - name: Validate Hosts
   hosts: all
+  become: yes
+  become_user: root
+  gather_facts: False
   gather_facts: false
   tasks:
       
