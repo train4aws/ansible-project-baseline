@@ -7,13 +7,12 @@
   gather_facts: False
   tasks:
     - name:  update
-      apt-get:
+      yum:
         name:  "*"
         state: latest
 #        skip_broken: yes
-      #register: yum_updates
-      register: apt-get update
+      register: yum_updates
 
-    - name: Reboot server1
+    - name: Reboot server
       reboot:
       when: dict((yum_updates.changes|default(dict())).updated|default([])).kernel is defined
