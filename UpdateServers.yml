@@ -1,6 +1,9 @@
 ---
 - name: Get server uptime
   hosts: all
+  become: yes
+  become_user: root
+  gather_facts: False
   tasks:
     - name:  update
       yum:
