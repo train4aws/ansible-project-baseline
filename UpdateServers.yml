@@ -7,11 +7,12 @@
   gather_facts: False
   tasks:
     - name:  update
-      yum:
+      apt-get:
         name:  "*"
         state: latest
 #        skip_broken: yes
-      register: yum_updates
+      #register: yum_updates
+      register: apt-get update
 
     - name: Reboot server1
       reboot:
