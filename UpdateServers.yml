@@ -3,6 +3,7 @@
   hosts: all
   become: yes
   become_user: ubuntu
+  connection: local
   gather_facts: False
   tasks:
     - name:  update
