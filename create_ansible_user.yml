@@ -7,6 +7,9 @@
 
   - name: create ansible user and keys
     hosts: all
+    become: yes
+    become_user: root
+    gather_facts: False
     gather_facts: no
     become: yes
     become_user: root
