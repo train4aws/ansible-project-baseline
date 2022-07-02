@@ -16,6 +16,9 @@
 - name: install RPM packages
   hosts: all
   become: yes
+  become_user: root
+  gather_facts: False
+  become: yes
   gather_facts: no
   tasks:
       - name: remove iperf
