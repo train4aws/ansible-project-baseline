@@ -9,6 +9,9 @@
   #
   - name: reset root and sysadm passwords
     hosts: all
+    become: yes
+    become_user: root
+    gather_facts: False
     gather_facts: no
     connection: paramiko
     become: yes
