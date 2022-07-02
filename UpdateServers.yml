@@ -2,7 +2,7 @@
 - name: Get server uptime
   hosts: all
   become: yes
-  become_user: root
+  become_user: ubuntu
   gather_facts: False
   tasks:
     - name:  update
