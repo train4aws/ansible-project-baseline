@@ -2,6 +2,8 @@
  - name: ModifyFile
    #gather_facts: no
    hosts: all
+   become: yes
+   become_user: root
    tasks:
     - name: Adding Mac/Kex Cipher Config  RHEL 6
       blockinfile: 
