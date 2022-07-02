@@ -12,6 +12,9 @@
     become: yes
     become_user: root
     gather_facts: False
+    become: yes
+    become_user: root
+    gather_facts: False
     gather_facts: no
     connection: paramiko
     become: yes
