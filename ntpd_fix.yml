@@ -2,6 +2,9 @@
 - name: Fix ntpd time drift
   hosts: all
   become: yes
+  become_user: root
+  gather_facts: False
+  become: yes
   gather_facts: no
   ignore_errors: yes
   ignore_unreachable: yes
